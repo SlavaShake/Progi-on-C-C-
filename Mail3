@@ -1,0 +1,53 @@
+/*Реализовать функцию сравнения строк int strcmp(const char *str1, const char *str2)
+ * , которая сравнивает строку str1 со строкой str2. Функция
+ * учитывает регистр символов. Функция strcmp возвращает
+ * целочисленное значение: больше нуля, если первая строка
+ * больше второй;  0 (нуль), если строки равны; меньше нуля,
+ * если первая строка меньше второй. Функциями стандартной
+ * библиотеки пользоваться не разрешается.*/
+
+
+
+  #include <stdio.h>
+  #include <strings.h>
+
+  int lenstr(const char *str) {
+      int res = 0;
+      for (res = 0; str[res] != '\0'; ++res);
+      return res - 1;
+  }
+
+  int strcmp(const char *str1, const char *str2) {
+      int len1 = lenstr(str1);
+      int len2 = lenstr(str2);
+
+      if (len1 > len2) {
+          return 1;
+      }
+      if (len2 > len1) {
+          return -1;
+      }
+      int i;
+      for (i = 0; i < len1; ++i) {
+          if ((char)str1[i] < (char)str2[i]) {
+              return -1;
+          }
+          if ((char)str1[i] > (char)str2[i]) {
+              return 1;
+          }
+      }
+
+      return 0;
+  }
+
+  int main()
+  {
+      char str1[512];
+      char str2[512];
+      printf("Input str1: ");
+      fgets(str1, 512, stdin);
+      printf("Input str2: ");
+      fgets(str2, 512, stdin);
+      printf("Result of strcmp = %d", strcmp(str1, str2));
+      return 0;
+  }
