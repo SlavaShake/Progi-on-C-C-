@@ -1,0 +1,42 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+void ZapolnenieMass(int dx,int de, int n, int w);
+
+int main(  )
+{
+   int n,xb,xe,w;
+
+   cout<<"Input step of polinom n= ";
+   cin>>n;
+   cout<<endl;
+   cout<<"Input begin of function, xb= ";
+   cin>>xb;
+   cout<<endl;
+   cout<<"Input end of function, xe= ";
+   cin>>xe;
+   cout<<endl;
+   cout<<"Input frequency of function, w= ";
+   cin>>w;
+   cout<<endl;
+
+   int c,dx,i=w+10;
+
+   dx=(xe-xb)/n;
+   c=dx/2;
+   //float dc;
+   float mas[i];
+   mas[0]=xb+c;
+   int j=0;
+   while(mas[i]<=xe)
+   {
+       mas[j+1]=mas[0]+dx*j;
+   }
+
+    cout << "Hello World!" << endl;
+    return 0;
+}
+
+
