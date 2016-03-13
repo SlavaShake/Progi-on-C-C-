@@ -1,0 +1,32 @@
+/*Реализовать функцию, принимающую в качестве параметра
+ * натуральное число n и возвращающую 1, если это число
+ *  является простым, и 0, в противном случае.*/
+
+#include <stdio.h>
+
+int is_prime(int number) {
+    if (number <= 3 && number >= 2) {
+        return 1;
+    }
+    int i;
+    for (i = 2; i < number; ++i) {
+        if (number % i == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int main() {
+    int number = 0;
+    printf("\nWrite number: ");
+    scanf("%d", &number);
+    int res = is_prime(number);
+    if (res) {
+        printf("%s\n", "Number is prime");
+    } else {
+        printf("%s\n", "Number is not prime");
+    }
+
+    return 0;
+}
