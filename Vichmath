@@ -6,41 +6,47 @@
 #include <math.h>
 #include <ctime>
 #include <iomanip>
+#include <fstream>
 # define M_PI       3.14159265 /* pi */
 
 using namespace std;
 
-void ZapolnenieMass(int dx, float de, int w, int n);
-float Function(float x, int n);
+void FillingMass(int dx, float de, int w, float n, int Vn);
+float Function(float x, float n, int Vn);
 
 int _tmain(int argc, _TCHAR* argv[])
 {	
-	int xb=0,n=9,w;
-	float xe=M_PI/2;
-	cout << "Input frequency of function, w= ";
+	int xb=0,Vn,w;
+	float xe=float(M_PI)/2,n;
+	cout << "Enter the version number, N= ";
+	cin >> Vn;
+	cout << endl;
+	n = float(Vn) / 2;
+	cout << "Input frequency for function, W= ";
 	cin >> w;
 	cout << endl;
-	ZapolnenieMass(xb,xe,w,n);
-	cout << "Hello World!" << endl;
-	cout << "runtime = " << clock() / 1000.0 << endl; // время работы программы   
+	FillingMass(xb, xe, w, n, Vn);
+	cout << "Runtime program = " << clock() / 1000.0 << endl; // время работы программы   
 	system("pause");
 	return 0;
 }
-void ZapolnenieMass(int xb, float xe, int w, int n)
+void FillingMass(int xb, float xe, int w, float n, int Vn)
 {
-	float **mass = new float* [3];
-	for (int count = 0; count < 3; count++)
+	ofstream textin;// создаём объект для записи в файл
+	ofstream textout;// создаём объект для чтения файла
+	textin.open("VichMath.txt", ios_base::trunc);// связываем объект с файлом
+	//удалить содержимое файла, если он существует
+	float **mass = new float* [2];//объявление динамического массива
+	for (int count = 0; count < 2; count++)
 	mass[count] = new float[w];
+	textin << "Variant = " << Vn << ";" << endl;
+	textin << "Frequency for function, W=" << w << ";" << endl << endl;
 	for (int k = 0; k < w; ++k)
 	{
-		//unsigned int start_time = clock(); // начальное время
 		float dx = (xe - xb) / w;
 		float c = xb + dx / 2;
 		mass[0][k] = c + dx*k;
-		mass[1][k] = Function(mass[0][k], n);
-		//unsigned int end_time = clock(); // конечное время
-		//unsigned int search_time = end_time - start_time; // искомое время
-		//mass[2][k] = search_time;
+		mass[1][k] = Function(mass[0][k], n, Vn);
 	}
 	for (int i = 0; i < 2; ++i)
 	{
@@ -50,10 +56,23 @@ void ZapolnenieMass(int xb, float xe, int w, int n)
 		}
 		cout << endl;
 	}
+
+	for (int k = 0; k < w; ++k)
+	{
+		textin << "c[" << (k + 1) << "] = " << mass[0][k] << endl;
+		textin << "F(c[" << (k + 1) << "]) = " << mass[1][k] << endl << endl;
+	}
+	// высвобождение памяти отводимой под двумерный динамический массив:
+	for (int count = 0; count < 2; count++)
+		delete[]  mass[count];
+	//      где 2 – количество строк в массиве
+	textin.close();//закрыли фаил
+	
 }
-float Function(float x,int n)
+float Function(float x,float n, int Vn)
 {
 	float func;
-	func = sin(n / (x + 1)) + pow(cos(n*x),2);
+	if (Vn < 15){ func = sin(n*x/ (n + x + 1)); }
+	else{func = sin(n / (x + 1)) + pow(cos(n*x), 2);}	
 	return func;
 }
