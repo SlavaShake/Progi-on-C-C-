@@ -1,42 +1,59 @@
+// VichMath.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
 #include <iostream>
 #include <math.h>
+#include <ctime>
+#include <iomanip>
+# define M_PI       3.14159265 /* pi */
 
 using namespace std;
 
-void ZapolnenieMass(int dx,int de, int n, int w);
+void ZapolnenieMass(int dx, float de, int w, int n);
+float Function(float x, int n);
 
-int main(  )
-{
-   int n,xb,xe,w;
-
-   cout<<"Input step of polinom n= ";
-   cin>>n;
-   cout<<endl;
-   cout<<"Input begin of function, xb= ";
-   cin>>xb;
-   cout<<endl;
-   cout<<"Input end of function, xe= ";
-   cin>>xe;
-   cout<<endl;
-   cout<<"Input frequency of function, w= ";
-   cin>>w;
-   cout<<endl;
-
-   int c,dx,i=w+10;
-
-   dx=(xe-xb)/n;
-   c=dx/2;
-   //float dc;
-   float mas[i];
-   mas[0]=xb+c;
-   int j=0;
-   while(mas[i]<=xe)
-   {
-       mas[j+1]=mas[0]+dx*j;
-   }
-
-    cout << "Hello World!" << endl;
-    return 0;
+int _tmain(int argc, _TCHAR* argv[])
+{	
+	int xb=0,n=9,w;
+	float xe=M_PI/2;
+	cout << "Input frequency of function, w= ";
+	cin >> w;
+	cout << endl;
+	ZapolnenieMass(xb,xe,w,n);
+	cout << "Hello World!" << endl;
+	cout << "runtime = " << clock() / 1000.0 << endl; // время работы программы   
+	system("pause");
+	return 0;
 }
-
-
+void ZapolnenieMass(int xb, float xe, int w, int n)
+{
+	float **mass = new float* [3];
+	for (int count = 0; count < 3; count++)
+	mass[count] = new float[w];
+	for (int k = 0; k < w; ++k)
+	{
+		//unsigned int start_time = clock(); // начальное время
+		float dx = (xe - xb) / w;
+		float c = xb + dx / 2;
+		mass[0][k] = c + dx*k;
+		mass[1][k] = Function(mass[0][k], n);
+		//unsigned int end_time = clock(); // конечное время
+		//unsigned int search_time = end_time - start_time; // искомое время
+		//mass[2][k] = search_time;
+	}
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < w; ++j)
+		{
+			cout << " | " << fixed << setprecision(4) << mass[i][j] << " | ";
+		}
+		cout << endl;
+	}
+}
+float Function(float x,int n)
+{
+	float func;
+	func = sin(n / (x + 1)) + pow(cos(n*x),2);
+	return func;
+}
