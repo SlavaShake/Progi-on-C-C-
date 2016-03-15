@@ -7,7 +7,7 @@
 #include <ctime>
 #include <iomanip>
 #include <fstream>
-# define M_PI       3.14159265 /* pi */
+# define M_PI       3.14159265 //pi
 
 using namespace std;
 
@@ -65,6 +65,7 @@ void FillingMass(int xb, float xe, int w, float n, int Vn)
 	// высвобождение памяти отводимой под двумерный динамический массив:
 	for (int count = 0; count < 2; count++)
 		delete[]  mass[count];
+	delete mass;
 	//      где 2 – количество строк в массиве
 	textin.close();//закрыли фаил
 	
