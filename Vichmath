@@ -18,24 +18,31 @@ int _tmain(int argc, _TCHAR* argv[])
 {	
 	int xb=0,Vn,w;
 	float xe=float(M_PI)/2,n;
-	cout << "Enter the version number, N= ";
-	cin >> Vn;
-	cout << endl;
-	n = float(Vn) / 2;
-	cout << "Input frequency for function, W= ";
-	cin >> w;
-	cout << endl;
-	FillingMass(xb, xe, w, n, Vn);
-	cout << "Runtime program = " << clock() / 1000.0 << endl; // время работы программы   
+
+	char k; k = 'Y';
+	while (k == 'y' || k == 'Y')
+	{
+		cout << "Enter the version number, N= ";
+		cin >> Vn;
+		cout << endl;
+		n = float(Vn) / 2;
+		cout << "Input frequency for function, W= ";
+		cin >> w;
+		cout << endl;
+		FillingMass(xb, xe, w, n, Vn);
+		cout << "You want to continue the work program? (Y/n)  k = ";
+		cin >> k;
+	}
 	system("pause");
 	return 0;
 }
 void FillingMass(int xb, float xe, int w, float n, int Vn)
 {
+	unsigned int start_time = clock(); // начальное время
 	ofstream textin;// создаём объект для записи в файл
 	ofstream textout;// создаём объект для чтения файла
-	textin.open("VichMath.txt", ios_base::trunc);// связываем объект с файлом
-	//удалить содержимое файла, если он существует
+	textin.open("VichMath.txt", ios_base::app);// связываем объект с файлом
+	//открыть файл для записи в конец файла, если такой имеется
 	float **mass = new float* [2];//объявление динамического массива
 	for (int count = 0; count < 2; count++)
 	mass[count] = new float[w];
@@ -66,14 +73,17 @@ void FillingMass(int xb, float xe, int w, float n, int Vn)
 	for (int count = 0; count < 2; count++)
 		delete[]  mass[count];
 	delete mass;
+	unsigned int end_time = clock(); // конечное время
+	unsigned int search_time = end_time - start_time; // искомое время
 	//      где 2 – количество строк в массиве
+	cout << "Runtime program = " << search_time / 1000.0 << endl; // время работы программы   
+	textin << "Runtime program = " << search_time / 1000.0 << endl << endl << endl << endl;
+
 	textin.close();//закрыли фаил
 	
 }
 float Function(float x,float n, int Vn)
 {
-	float func;
-	if (Vn < 15){ func = sin(n*x/ (n + x + 1)); }
-	else{func = sin(n / (x + 1)) + pow(cos(n*x), 2);}	
-	return func;
+	if (Vn < 15){ return  (sin(n*x / (n + x + 1))); }
+	else{ return  (sin(n / (x + 1)) + pow(cos(n*x), 2)); }
 }
