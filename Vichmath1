@@ -20,8 +20,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	double xe = M_PI / 2;
 	float n;
 
-	int k; k = 1;
-	while (k == 1)
+	char k; k = 'Y';
+	while (k == 'y' || k== 'Y')
 	{
 		cout << "Enter the version number, N= ";
 		cin >> Vn;
@@ -31,7 +31,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cin >> w;
 		cout << endl;
 		Integral(xb, xe, w, n, Vn);
-		cout << "You want to continue the work program? (1 to run/other symbol to end)  k = ";
+		cout << "You want to continue the work program? (Y/n)  k = ";
 		cin >> k;
 	}
 	system("pause");
