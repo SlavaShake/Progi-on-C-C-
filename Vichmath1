@@ -1,0 +1,103 @@
+// VichMath.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <math.h>
+#include <ctime>
+#include <iomanip>
+#include <fstream>
+# define M_PI           3.14159265358979323846  /* pi */
+
+using namespace std;
+
+void Integral(int xb, double xe, int w, float n, int Vn);
+double Function(double x, float n, int Vn);
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int xb = 0, Vn, w;
+	double xe = M_PI / 2;
+	float n;
+
+	int k; k = 1;
+	while (k == 1)
+	{
+		cout << "Enter the version number, N= ";
+		cin >> Vn;
+		cout << endl;
+		n = float(Vn) / 2;
+		cout << "Input frequency for function, W= ";
+		cin >> w;
+		cout << endl;
+		Integral(xb, xe, w, n, Vn);
+		cout << "You want to continue the work program? (1 to run/other symbol to end)  k = ";
+		cin >> k;
+	}
+	system("pause");
+	return 0;
+}
+void Integral(int xb, double xe, int w, float n, int Vn)
+{
+	unsigned int start_time = clock(); // начальное время
+	ofstream textin;// создаём объект для записи в файл
+	textin.open("VichMath.txt", ios_base::app);// связываем объект с файлом
+	//открыть файл для записи в конец файла, если такой имеется
+	textin << "Variant = " << Vn << ";" << endl;
+	textin << "Frequency for function, W=" << w << ";" << endl << endl;
+	 
+	double Simpson, Rectangle, Trapeze, dx, I_xe, I_xb;
+	dx = (xe - xb) / w;
+	Rectangle = 0;
+	Trapeze = 0;
+	Simpson = 0;
+	I_xb = double(xb);
+	I_xe = xb + dx;
+	//Медос прямоугольников и Метод трапеции
+	//Метод Симпсона 
+	for (int i = 0; i < w; ++i)
+	{
+		I_xb += i*dx;
+		I_xe += i*dx;
+		Rectangle += Function(((I_xe + I_xb) / 2.0), n, Vn)*dx;
+		Trapeze += (Function(I_xb,n,Vn)+Function(I_xe,n,Vn))*dx/2.0;
+		Simpson += dx*(Function(I_xb,n,Vn)+4.0*Function(((I_xb+I_xe)/2.0),n,Vn)+Function(I_xe,n,Vn))/6;
+	}
+	
+	cout << "Rectangle = " << fixed << setprecision(15) << Rectangle << endl;
+	cout << "Trapeze   = " << fixed << setprecision(15) << Trapeze << endl;
+	cout << "Simpson   = " << fixed << setprecision(15) << Simpson << endl<<endl;
+		
+	textin << "Rectangle = " << fixed << setprecision(15) << Rectangle << endl;
+	textin << "Trapeze   = " << fixed << setprecision(15) << Trapeze << endl;
+	textin << "Simpson   = " << fixed << setprecision(15) << Simpson << endl<<endl;
+	double min;
+	min = Rectangle;
+	if (Trapeze < min) min = Trapeze;
+	if (Simpson < min) min = Simpson;
+	if (min == Rectangle)
+	{
+		cout << "Method Rectangle is best for the calculation of the integral" << endl << endl;
+		textin << "Method Rectangle is best for the calculation of the integral" << endl << endl;
+	}
+	if (min == Trapeze)
+	{
+		cout << "Method Trapeze is best for the calculation of the integral" << endl << endl;
+		textin << "Method Trapeze is best for the calculation of the integral" << endl << endl;
+	}
+	if (min == Simpson)
+	{
+		cout << "Method Simson is best for the calculation of the integral" << endl<<endl;
+		textin << "Method Simson is best for the calculation of the integral" << endl << endl;
+	}
+	unsigned int end_time = clock(); // конечное время
+	unsigned int search_time = end_time - start_time; // искомое время
+	cout << "Runtime program = " << search_time / 1000.0 << endl; // время работы программы   
+	textin << "Runtime program = " << search_time / 1000.0 << endl << endl << endl << endl;
+	textin.close();//закрыли фаил
+}
+double Function(double x, float n, int Vn)
+{
+	if (Vn < 15){ return  (sin(n*x / (n + x + 1))); }
+	else{ return  (sin(n / (x + 1)) + pow(cos(n*x), 2)); }
+}
