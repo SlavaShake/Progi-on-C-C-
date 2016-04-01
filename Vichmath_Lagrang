@@ -1,0 +1,90 @@
+// VichMath.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <math.h>
+#include <ctime>
+#include <iomanip>
+#include <fstream>
+# define M_PI       3.14159265 //pi
+
+using namespace std;
+
+void FillingMass(int dx, double de, int w, double n, int Vn, double X);
+double Function(double x, double n, int Vn);
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int xb = 0, Vn, w;
+	double xe = M_PI / 2, n, X;
+
+	char k; k = 'Y';
+	while (k == 'y' || k == 'Y')
+	{
+		cout << "Enter the version number, N= ";
+		cin >> Vn;
+		cout << endl;
+		n = double(Vn) / 2;
+		cout << "Input frequency for function, W= ";
+		cin >> w;
+		cout << endl;
+		cout << "Intput X to find, X= ";
+		cin >> X;
+		FillingMass(xb, xe, w, n, Vn, X);
+		cout << "You want to continue the work program? (Y/n)   ";
+		cin >> k;
+	}
+	system("pause");
+	return 0;
+}
+void FillingMass(int xb, double xe, int w, double n, int Vn, double X)
+{
+	double F = 0.0;
+	unsigned int start_time = clock(); // начальное время
+	ofstream textin;// создаём объект для записи в файл
+	textin.open("VichMath.txt", ios_base::app);// связываем объект с файлом
+	//открыть файл для записи в конец файла, если такой имеется
+	double **mass = new double*[2];//объявление динамического массива
+	for (int count = 0; count < 2; count++)
+		mass[count] = new double[w];
+	textin << "Variant = " << Vn << ";" << endl;
+	textin << "Frequency for function, W=" << w << ";" << endl << endl;
+	textin << "X to find = " << X << ";" << endl;
+	double dx = (xe - xb) / w;
+
+	for (int k = 0; k < w; k++)
+	{
+		mass[0][k] = xb + dx*k;
+		mass[1][k] = Function(mass[0][k], n, Vn);
+	}
+
+	for (int i = 0; i < w; i++)
+	{
+		double P = 1.0;
+		for (int j = 0; j < w; j++)
+		{
+			if (j != i) { P *= (X - mass[0][j]) / (mass[0][i] - mass[0][j]); }
+		}
+		F += P*mass[1][i];
+	}
+	textin << fixed << setprecision(4) << "F(X) = " << F << ";" << endl;
+	cout << fixed << setprecision(4) << "F(X) = " << F << ";" << endl;
+	
+	// высвобождение памяти отводимой под двумерный динамический массив:
+	for (int count = 0; count < 2; count++)
+		delete[]  mass[count];
+	delete mass;
+	unsigned int end_time = clock(); // конечное время
+	unsigned int search_time = end_time - start_time; // искомое время
+	//      где 2 – количество строк в массиве
+	cout << "Runtime program = " << search_time / 1000.0 << endl; // время работы программы   
+	textin << "Runtime program = " << search_time / 1000.0 << endl << endl << endl << endl;
+	textin.close();//закрыли фаил
+
+}
+double Function(double x, double n, int Vn)
+{
+	if (Vn < 15){ return  (sin(n*x / (n + x + 1))); }
+	else{ return  (sin(n / (x + 1)) + pow(cos(n*x), 2)); }
+}
