@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void FillingMass(int dx, double de, int w, double n, int Vn, double X);
+void FillingMass(int xb, double xe, int w, double n, int Vn, double X);
 double Function(double x, double n, int Vn);
 
 int _tmain(int argc, _TCHAR* argv[])
